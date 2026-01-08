@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Techno Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS VARIABLES --- */
+        /* --- TEMA DUNIA MEMANCING (Paste ini ke semua file) --- */
+:root { 
+    /* NUANSA BARU: HIJAU & PUTIH */
+    --darker: #ffffff;      /* Background Utama Putih Bersih */
+    --dark: #f8fafc;        /* Background Kartu (Abu-abu sangat muda) */
+    
+    /* ACCENT: Hijau Alam/Segar */
+    --primary: #22c55e;      /* Hijau Hijau Segar (Green 500) */
+    --primary-dark: #15803d; /* Hijau Tua (Green 700) */
+    
+    /* TEXT & LAINNYA */
+    --light: #1e293b;       /* Teks Utama (Warna Gelap agar terbaca di bg putih) */
+    --gray: #64748b;        /* Teks pudar/keterangan */
+    --success: #10b981; 
+    --danger: #ef4444; 
+    --warning: #f59e0b; 
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+}
+/* Sisanya biarkan default, warna utama sudah berubah jadi biru */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--darker); color: var(--light); line-height: 1.6; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        .header { 
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2); /* Border hijau tipis */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        .navbar { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--light); }
+        .logo span { color: var(--primary); }
+
+        /* Layout */
+        .checkout-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; margin-top: 30px; margin-bottom: 60px; }
+        
+        /* Box Styles */
+        .section-box { background: var(--dark); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .section-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; margin-bottom: 8px; font-size: 0.9rem; color: var(--gray); }
+        .form-input, .form-select { width: 100%; padding: 12px; background: var(--darker); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: black; font-size: 1rem; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); }
+        textarea.form-input { resize: vertical; }
+
+        /* Payment Options */
+        .payment-option { display: flex; align-items: center; gap: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.3s; }
+        .payment-option:hover { background: rgba(37, 99, 235, 0.1); border-color: var(--primary); }
+        .payment-option input { accent-color: var(--primary); transform: scale(1.2); }
+
+        /* Order Summary (Right Column) */
+        .order-summary { background: var(--dark); padding: 25px; border-radius: 12px; position: sticky; top: 100px; border: 1px solid rgba(255,255,255,0.05); }
+        
+        .item-row { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #fff; }
+        .item-info { flex: 1; }
+        .item-name { font-size: 0.9rem; font-weight: 600; display: block; line-height: 1.2; margin-bottom: 4px; }
+        .item-meta { font-size: 0.8rem; color: var(--gray); }
+        .item-price { font-size: 0.9rem; font-weight: 700; color: var(--primary); }
+
+        /* Protection Checkbox */
+        .protection-box { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--success); padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; align-items: flex-start; }
+        .protection-box input { margin-top: 5px; accent-color: var(--success); transform: scale(1.2); }
+        .protection-text h4 { font-size: 0.95rem; font-weight: 700; color: var(--success); margin-bottom: 2px; }
+        .protection-text p { font-size: 0.8rem; color: var(--gray); line-height: 1.3; }
+
+        /* Cost Calculation */
+        .cost-row { display: flex; justify-content: space-between; margin-bottom: 10px; color: var(--gray); font-size: 0.95rem; }
+        .cost-row.total { color: white; font-weight: 800; font-size: 1.3rem; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
+        
+        .btn-pay { width: 100%; padding: 15px; background: var(--success); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 20px; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .btn-pay:hover { background: #059669; }
+
+        @media (max-width: 768px) { .checkout-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo"><i class="fas fa-fish"></i> DUNIA<span>MEMANCING</span></a>
+                <div style="color: var(--gray); font-size: 0.9rem;">
+                    <i class="fas fa-lock"></i> Checkout Aman
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="checkout-layout">
+            
+            <!-- KOLOM KIRI: FORMULIR -->
+            <div class="left-column">
+                
+                <!-- 1. Alamat Pengiriman -->
+                <div class="section-box">
+                    <h3 class="section-title"><i class="fas fa-map-marker-alt text-primary"></i> Alamat Pengiriman</h3>
+                    <div class="form-group">
+                        <label class="form-label">Nama Penerima</label>
+                        <input type="text" class="form-input" id="input-name" placeholder="Nama Lengkap">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nomor Telepon / WA</label>
+                        <input type="tel" class="form-input" id="input-phone" placeholder="0812xxxx">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alamat Lengkap</label>
+                        <textarea class="form-input" id="input-address" rows="3" placeholder="Jalan, No Rumah, Kecamatan, Kota..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 2. Pengiriman -->
+                <div class="section-box">
+                    <h3 class="section-title"><i class="fas fa-truck text-primary"></i> Metode Pengiriman</h3>
+                    <div class="form-group">
+                        <select class="form-select" id="shipping-method" onchange="updateTotal()">
+                            <option value="0">Pilih Kurir...</option>
+                            <option value="15000">JNE Reguler (Rp 15.000)</option>
+                            <option value="18000">J&T Express (Rp 18.000)</option>
+                            <option value="35000">SiCepat BEST (Rp 35.000)</option>
+                            <option value="50000">GoSend Instant (Rp 50.000)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. Pesan untuk Penjual -->
+                <div class="section-box">
+                    <h3 class="section-title"><i class="fas fa-comment-alt text-primary"></i> Pesan untuk Penjual</h3>
+                    <div class="form-group">
+                        <textarea class="form-input" rows="2" placeholder="Contoh: Tolong packing kayu, warna hitam ya..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 4. Pembayaran -->
+                <div class="section-box">
+                    <h3 class="section-title"><i class="fas fa-wallet text-primary"></i> Metode Pembayaran</h3>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="transfer" checked>
+                        <div>
+                            <strong>Transfer Bank (BCA/Mandiri/BRI)</strong>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Verifikasi Otomatis</div>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="ewallet">
+                        <div>
+                            <strong>E-Wallet (GoPay/OVO/Dana/ShopeePay)</strong>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Scan QRIS</div>
+                        </div>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="cod">
+                        <div>
+                            <strong>COD (Bayar di Tempat)</strong>
+                            <div style="font-size: 0.8rem; color: var(--gray);">Bayar tunai ke kurir saat barang sampai</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: RINGKASAN -->
+            <div class="right-column">
+                <div class="order-summary">
+                    <h3 class="section-title">Ringkasan Pesanan</h3>
+                    
+                    <!-- Daftar Barang (Diisi JS) -->
+                    <div id="order-items">
+                        <!-- Item akan muncul di sini -->
+                    </div>
+
+                    <!-- Proteksi Kerusakan -->
+                    <div class="protection-box">
+                        <input type="checkbox" id="protection-check" onchange="updateTotal()">
+                        <div class="protection-text">
+                            <h4>Proteksi Kerusakan</h4>
+                            <p>Lindungi produkmu dari kerusakan fisik, cairan, atau hilang. Biaya: <strong>Rp 25.000</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Rincian Biaya -->
+                    <div style="margin-top: 20px;">
+                        <div class="cost-row">
+                            <span>Subtotal Produk</span>
+                            <span id="subtotal">Rp 0</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Biaya Pengiriman</span>
+                            <span id="shipping-cost">Rp 0</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Proteksi</span>
+                            <span id="protection-cost" style="color: var(--success);">Rp 0</span>
+                        </div>
+                        <div class="cost-row">
+                            <span>Biaya Layanan</span>
+                            <span>Rp 1.000</span>
+                        </div>
+                        
+                        <div class="cost-row total">
+                            <span>Total Tagihan</span>
+                            <span id="grand-total" style="color: var(--primary);">Rp 0</span>
+                        </div>
+                        
+                        <button class="btn-pay" onclick="processPayment()">
+                            <i class="fas fa-lock"></i> Bayar Sekarang
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script>
+        // 1. AMBIL DATA DARI KERANJANG
+        let cartData = JSON.parse(localStorage.getItem('technoCart')) || [];
+        const SERVICE_FEE = 1000;
+        const PROTECTION_FEE = 25000;
+
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        };
+
+        // ====== WISHLIST BADGE UPDATE ======
+        // Tambahkan di checkout.html
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCheckout();
+            updateWishlistBadge(); // <-- TAMBAHKAN INI
+        });
+
+        function updateWishlistBadge() {
+            const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+            const badge = document.querySelector('.wishlist-count');
+            if (badge) {
+                badge.textContent = wishlist.length;
+            }
+        }
+
+        // 2. FUNGSI LOAD HALAMAN (WAJIB DIPANGGIL)
+        function loadCheckout() {
+            const itemsContainer = document.getElementById('order-items');
+            
+            // Cek Login Dulu
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                alert("Sesi habis, silakan login kembali.");
+                window.location.href = 'Hal-login.html';
+                return;
+            }
+
+            // Jika keranjang kosong, kembalikan ke index
+            if (cartData.length === 0) {
+                alert("Keranjang Anda kosong, tidak bisa checkout!");
+                window.location.href = 'index.html';
+                return;
+            }
+
+            itemsContainer.innerHTML = '';
+            let subtotal = 0;
+
+            cartData.forEach(item => {
+                subtotal += item.price * item.qty;
+                
+                const html = `
+                    <div class="item-row">
+                        <img src="${item.img}" class="item-img">
+                        <div class="item-info">
+                            <span class="item-name">${item.name}</span>
+                            <div class="item-meta">${item.qty} x ${formatRupiah(item.price)}</div>
+                            <div class="item-meta">Varian: ${item.variant}</div>
+                        </div>
+                        <div class="item-price">${formatRupiah(item.price * item.qty)}</div>
+                    </div>
+                `;
+                itemsContainer.innerHTML += html;
+            });
+
+            // Simpan subtotal di elemen tersembunyi/dataset
+            const subEl = document.getElementById('subtotal');
+            subEl.dataset.value = subtotal;
+            subEl.textContent = formatRupiah(subtotal);
+            
+            updateTotal();
+        }
+
+        function updateTotal() {
+            const subtotal = parseInt(document.getElementById('subtotal').dataset.value) || 0;
+            const shippingSelect = document.getElementById('shipping-method');
+            const shippingFee = parseInt(shippingSelect.value) || 0;
+            
+            const protectionCheck = document.getElementById('protection-check');
+            const isProtected = protectionCheck ? protectionCheck.checked : false;
+            
+            const protectionCost = isProtected ? PROTECTION_FEE : 0;
+
+            document.getElementById('shipping-cost').textContent = formatRupiah(shippingFee);
+            
+            const protEl = document.getElementById('protection-cost');
+            if(protEl) protEl.textContent = formatRupiah(protectionCost);
+
+            // Hitung Total Akhir
+            const grandTotal = subtotal + shippingFee + protectionCost + SERVICE_FEE;
+            document.getElementById('grand-total').textContent = formatRupiah(grandTotal);
+        }
+
+       function processPayment() {
+            // Validasi Input
+            const name = document.getElementById('input-name').value;
+            const phone = document.getElementById('input-phone').value;
+            const address = document.getElementById('input-address').value;
+            const shipping = document.getElementById('shipping-method').value;
+            
+            if(!name || !phone || !address) {
+                alert("Mohon lengkapi alamat pengiriman!");
+                return;
+            }
+
+            if(shipping == "0") {
+                alert("Mohon pilih kurir pengiriman!");
+                return;
+            }
+
+            const paymentRadio = document.querySelector('input[name="payment"]:checked');
+            const paymentMethod = paymentRadio ? paymentRadio.value : 'transfer';
+            const grandTotalText = document.getElementById('grand-total').textContent;
+
+            if(confirm(`Total tagihan ${grandTotalText}. Proses pesanan sekarang?`)) {
+                
+                // Status awal
+                let initialStatus = (paymentMethod === 'cod') ? 'Dikemas' : 'Belum Bayar';
+
+                // Buat Objek Pesanan
+                const newOrder = {
+                    id: 'ORD-' + Math.floor(Date.now() / 1000), // ID Unik dr timestamp
+                    date: new Date().toLocaleDateString('id-ID'),
+                    total: grandTotalText,
+                    status: initialStatus,
+                    method: paymentMethod,
+                    items: cartData
+                };
+
+                // Simpan ke Riwayat
+                let orderHistory = JSON.parse(localStorage.getItem('technoOrderHistory')) || [];
+                orderHistory.unshift(newOrder);
+                localStorage.setItem('technoOrderHistory', JSON.stringify(orderHistory));
+
+                // Hapus Keranjang
+                localStorage.removeItem('technoCart');
+                
+                // Pindah ke Profile (Tab Pesanan)
+                window.location.href = 'profile.html?new_order=true';
+            }
+        }
+
+        // --- INI YANG KEMARIN HILANG: MEMANGGIL FUNGSI SAAT LOAD ---
+        document.addEventListener('DOMContentLoaded', loadCheckout);
+    </script>
+</body>
+</html>

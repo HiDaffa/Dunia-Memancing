@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="styleLogIn.css">
+    <title>DuniaMancing - Login</title>
+</head>
+
+<body>
+    
+    <div class="container" id="container">
+        <!-- FORM REGISTER -->
+        <div class="form-container sign-up">
+            <form id="registerForm">
+                <h1>Daftar</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+                <span>atau gunakan email untuk mendaftar</span>
+                <input type="text" placeholder="Nama Lengkap" id="regName" required>
+                <input type="email" placeholder="Email" id="regEmail" required>
+                <input type="password" placeholder="Password" id="regPassword" required>
+                <button type="submit">Daftar Sekarang</button>
+            </form> 
+        </div>
+        
+        <!-- FORM LOGIN -->
+        <div class="form-container sign-in">
+            <form id="loginForm">
+                <h1>Log In</h1>
+                <div class="social-icons">
+                    <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
+                    <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+                </div>
+                <span>atau gunakan email dan password</span>
+                <input type="email" placeholder="Email" id="loginEmail" required>
+                <input type="password" placeholder="Password" id="loginPassword" required>
+                <a href="#">Lupa Password?</a> 
+                <button type="submit">Log In</button>
+            </form> 
+        </div>
+        
+        <!-- TOGGLE PANEL -->
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Selamat Datang Kembali!</h1>
+                    <p>Masuk ke akun Anda untuk lanjutkan berbelanja dan lihat promo terbaru</p>
+                    <button class="hidden" id="login">Log In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Halo Pemancing!</h1>
+                    <p>Daftar sekarang untuk akses promo dan kemudahan berbelanja</p>
+                    <button class="hidden" id="register">Daftar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scriptLogIn.js"></script>
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akun Saya - Techno Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- CSS VARIABLES --- */
+:root { 
+    /* NUANSA BARU: HIJAU & PUTIH */
+    --darker: #ffffff;      /* Background Utama Putih Bersih */
+    --dark: #f8fafc;        /* Background Kartu (Abu-abu sangat muda) */
+    
+    /* ACCENT: Hijau Alam/Segar */
+    --primary: #22c55e;      /* Hijau Hijau Segar (Green 500) */
+    --primary-dark: #15803d; /* Hijau Tua (Green 700) */
+    
+    /* TEXT & LAINNYA */
+    --light: #1e293b;       /* Teks Utama (Warna Gelap agar terbaca di bg putih) */
+    --gray: #64748b;        /* Teks pudar/keterangan */
+    --success: #10b981; 
+    --danger: #ef4444; 
+    --warning: #f59e0b; 
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+}
+/* Sisanya biarkan default, warna utama sudah berubah jadi biru */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--darker); color: var(--light); line-height: 1.6; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header */
+        .header { 
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2); /* Border hijau tipis */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        .navbar { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--light); }
+        .logo span { color: var(--primary); }
+        .nav-icons { display: flex; gap: 20px; }
+        .nav-icons a { color: var(--light); font-size: 1.2rem; text-decoration: none; position: relative; cursor: pointer; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--danger); color: white; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Layout */
+        .profile-layout { display: grid; grid-template-columns: 250px 1fr; gap: 30px; margin-top: 40px; margin-bottom: 60px; }
+        
+        /* Sidebar */
+        .sidebar { background: var(--dark); border-radius: 12px; padding: 20px; height: fit-content; border: 1px solid rgba(255,255,255,0.05); }
+        .user-info { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .user-avatar { width: 80px; height: 80px; background: var(--primary); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: white; text-transform: uppercase; }
+        .menu-btn { display: block; width: 100%; text-align: left; padding: 12px 15px; color: var(--gray); background: none; border: none; border-radius: 8px; margin-bottom: 5px; transition: 0.3s; cursor: pointer; font-size: 1rem; }
+        .menu-btn:hover, .menu-btn.active { background: rgba(37, 99, 235, 0.1); color: var(--primary); font-weight: 600; }
+        .menu-btn i { width: 25px; }
+
+        /* Content Area */
+        .content-section { display: none; } /* Hidden by default */
+        .content-section.active { display: block; }
+        .content-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; }
+
+        /* TABS PESANAN */
+        .order-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; overflow-x: auto; }
+        .tab-btn { padding: 10px 20px; background: none; border: none; color: var(--gray); cursor: pointer; font-weight: 600; border-bottom: 2px solid transparent; white-space: nowrap; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-btn:hover { color: var(--light); }
+
+        /* Order Card */
+        .order-card { background: var(--dark); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .order-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 15px; }
+        .order-status { padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        
+        /* Status Colors */
+        .status-belum-bayar { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
+        .status-dikemas { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-dikirim { background: rgba(59, 130, 246, 0.2); color: var(--primary); }
+        .status-selesai { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+
+        .order-item { display: flex; gap: 15px; margin-bottom: 15px; }
+        .item-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; background: #fff; }
+        .item-info h4 { font-size: 0.95rem; margin-bottom: 5px; }
+        .item-info p { font-size: 0.85rem; color: var(--gray); }
+        
+        .order-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .total-price { font-size: 1.1rem; font-weight: 700; color: var(--light); }
+        
+        .btn-action { padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; border: none; transition: 0.3s; }
+        .btn-pay { background: var(--primary); color: white; }
+        .btn-track { background: transparent; border: 1px solid var(--gray); color: var(--light); }
+        .btn-track:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-rate { background: var(--success); color: white; }
+        /* Gaya untuk tombol batal */
+.btn-cancel { 
+    background: transparent; 
+    border: 1px solid var(--danger); 
+    color: var(--danger); 
+    margin-left: 10px;
+}
+.btn-cancel:hover { 
+    background: var(--danger); 
+    color: white; 
+}
+
+/* Warna status dibatalkan */
+.status-dibatalkan { 
+    background: rgba(100, 116, 139, 0.2); 
+    color: var(--gray); 
+}
+
+        /* Settings Form */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; color: var(--gray); }
+        .form-input { width: 100%; padding: 12px; background: var(--darker); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: Black; }
+        .btn-save { background: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+        .empty-state { text-align: center; padding: 50px; color: var(--gray); }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.5; }
+        
+        /* Alert Success */
+        .alert-success { background: rgba(16, 185, 129, 0.2); border: 1px solid var(--success); color: #d1fae5; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; align-items: center; gap: 10px; }
+
+        @media (max-width: 768px) { .profile-layout { grid-template-columns: 1fr; } .order-tabs { font-size: 0.9rem; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo"><i class="fas fa-fish"></i> DUNIA<span>MEMANCING</span></a>
+                <div class="nav-icons">
+                    <a href="index.html" title="Home"><i class="fas fa-home"></i></a>
+                    <a href="cart.html" title="Keranjang">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <!-- Tombol Logout di Header -->
+                    <a onclick="logout()" title="Keluar"><i class="fas fa-sign-out-alt"></i></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="profile-layout">
+            
+            <!-- Sidebar Menu -->
+            <aside class="sidebar">
+                <div class="user-info">
+                    <!-- Avatar Inisial -->
+                    <div class="user-avatar" id="profile-avatar">DM</div>
+                    <!-- Nama User Dinamis -->
+                    <h3 id="profile-name">Pemancing</h3>
+                    <p style="color: var(--gray); font-size: 0.9rem;" id="profile-email">user@example.com</p>
+                </div>
+                <nav>
+                    <button class="menu-btn active" onclick="switchMenu('orders')"><i class="fas fa-shopping-bag"></i> Pesanan Saya</button>
+                    <button class="menu-btn" onclick="switchMenu('reviews')"><i class="fas fa-comment-dots"></i> Riwayat Komentar</button> <!-- Tambahkan ini -->
+                    <button class="menu-btn" onclick="switchMenu('settings')"><i class="fas fa-cog"></i> Pengaturan</button>
+                    <!-- Tombol Logout di Sidebar -->
+                    <button class="menu-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </nav>
+            </aside>
+
+            <!-- SECTION: PESANAN SAYA -->
+            <section id="section-orders" class="content-section active">
+                <h2 class="content-title">Pesanan Saya</h2>
+                
+                <!-- Alert Sukses -->
+                <div id="success-alert" class="alert-success">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>Pembayaran Berhasil!</strong>
+                        <p style="margin:0; font-size: 0.9rem;">Pesanan Anda telah dibuat dan sedang diproses penjual.</p>
+                    </div>
+                </div>
+                
+                <!-- Tabs Status -->
+                <div class="order-tabs">
+                    <button class="tab-btn active" onclick="filterOrders('Belum Bayar')">Belum Bayar</button>
+                    <button class="tab-btn" onclick="filterOrders('Dikemas')">Dikemas</button>
+                    <button class="tab-btn" onclick="filterOrders('Dikirim')">Dikirim</button>
+                    <button class="tab-btn" onclick="filterOrders('Selesai')">Selesai</button>
+                    <button class="tab-btn" onclick="filterOrders('Dibatalkan')">Dibatalkan</button>
+                </div>
+
+                <!-- Daftar Pesanan -->
+                <div id="order-list-container">
+                    <!-- Diisi oleh JavaScript -->
+                </div>
+            </section>
+
+            <!-- SECTION: RIWAYAT KOMENTAR -->
+<section id="section-reviews" class="content-section">
+    <h2 class="content-title">Riwayat Ulasan Saya</h2>
+    <div id="my-reviews-container">
+        <!-- List komentar akan muncul di sini -->
+    </div>
+</section>
+
+            <!-- SECTION: PENGATURAN -->
+            <section id="section-settings" class="content-section">
+                <h2 class="content-title">Pengaturan Akun</h2>
+                <div class="order-card">
+                    <div class="form-group">
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-input" id="input-name" value="">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="input-email" value="" readonly style="opacity: 0.5;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nomor Telepon</label>
+                        <input type="tel" class="form-input" placeholder="Isi Nomor Telepon Anda">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alamat Utama</label>
+                        <textarea class="form-input" rows="3" placeholder="Isi Alamat Rumah Anda"></textarea>
+                    </div>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+                    <div class="form-group">
+                        <label class="form-label">Password Baru (Opsional)</label>
+                        <input type="password" class="form-input" placeholder="Kosongkan jika tidak ingin mengubah">
+                    </div>
+                    <button class="btn-save" onclick="saveProfile()">Simpan Perubahan</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // 1. LOAD DATA USER (INI YANG PENTING)
+        function loadUserProfile() {
+            // Ambil nama dari LocalStorage (yang disimpan saat Register/Login)
+            const username = localStorage.getItem('username') || 'User Techno';
+            // Email dummy (karena di register sederhana kita belum simpan email)
+            const email = username.toLowerCase().replace(/\s+/g, '') + '@gmail.com';
+
+            // Update Sidebar
+            document.getElementById('profile-name').textContent = username;
+            document.getElementById('profile-email').textContent = email;
+            // Update Avatar (Huruf Depan)
+            document.getElementById('profile-avatar').textContent = username.charAt(0);
+
+            // Update Form Pengaturan
+            document.getElementById('input-name').value = username;
+            document.getElementById('input-email').value = email;
+        }
+
+        // 2. SIMPAN PROFIL BARU
+        function saveProfile() {
+            const newName = document.getElementById('input-name').value;
+            if(newName) {
+                localStorage.setItem('username', newName);
+                alert('Profil berhasil disimpan!');
+                loadUserProfile(); // Refresh tampilan
+            }
+        }
+
+        // 3. UPDATE KERANJANG DI HEADER
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('technoCart')) || [];
+            let totalItems = 0;
+            cart.forEach(item => { totalItems += item.qty; });
+            document.querySelector('.cart-count').textContent = totalItems;
+        }
+
+        // 4. SWITCH MENU (Update untuk 3 Menu)
+        function switchMenu(menuName) {
+            // Sembunyikan semua section dan matikan semua status active di tombol
+            document.querySelectorAll('.content-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(el => el.classList.remove('active'));
+
+            // Tampilkan section yang dipilih
+            const targetSection = document.getElementById(`section-${menuName}`);
+            if(targetSection) targetSection.classList.add('active');
+
+            // Tentukan tombol mana yang harus menyala (active)
+            // Urutan: 0 = Pesanan, 1 = Komentar, 2 = Pengaturan
+            let btnIndex = 0;
+            if (menuName === 'orders') btnIndex = 0;
+            else if (menuName === 'reviews') btnIndex = 1;
+            else if (menuName === 'settings') btnIndex = 2;
+
+            const allButtons = document.querySelectorAll('.menu-btn');
+            if(allButtons[btnIndex]) allButtons[btnIndex].classList.add('active');
+
+            // JIKA memilih menu reviews, panggil fungsi untuk muat data komentar
+            if(menuName === 'reviews') {
+                loadMyReviews();
+            }
+        }
+
+        // 5. RENDER PESANAN (DIPERBAIKI UNTUK MENGHITUNG TOTAL OTOMATIS)
+        function filterOrders(statusFilter) {
+            // Update UI Tab Active
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.textContent === statusFilter) btn.classList.add('active');
+            });
+
+            // Ambil data
+            const orderHistory = JSON.parse(localStorage.getItem('technoOrderHistory')) || [];
+            const container = document.getElementById('order-list-container');
+            container.innerHTML = '';
+
+            const filteredOrders = orderHistory.filter(order => order.status === statusFilter);
+
+            // Cek jika kosong
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <p>Tidak ada pesanan di status "${statusFilter}"</p>
+                    </div>`;
+                return;
+            }
+
+            // Loop pesanan
+            filteredOrders.forEach(order => {
+                const firstItem = order.items[0];
+                const otherCount = order.items.length - 1;
+                const otherText = otherCount > 0 ? `+ ${otherCount} barang lainnya` : '';
+
+                // --- LOGIKA PERHITUNGAN ULANG TOTAL (FIX) ---
+                let subtotalBarang = 0;
+                
+                // Hitung total harga barang dari semua item di pesanan ini
+                order.items.forEach(item => {
+                    // Pastikan harga diambil sebagai angka (hapus 'Rp' dan titik)
+                    // Asumsi: item.price ada di database. Jika tidak, ganti logic ini.
+                    let hargaBersih = 0;
+                    if(item.price) {
+                         hargaBersih = parseInt(item.price.toString().replace(/[^0-9]/g, '')) || 0;
+                    }
+                    subtotalBarang += (hargaBersih * item.qty);
+                });
+
+                // Tentukan Ongkir (Bisa diset manual 20000 atau ambil dari data jika ada)
+                // Jika di data tersimpan ongkir, pakai itu. Jika tidak, default 20.000
+                let ongkir = order.ongkir ? parseInt(order.ongkir) : 20000; 
+
+                // Hitung Grand Total
+                let totalFix = subtotalBarang + ongkir;
+                
+                // Format ke Rupiah
+                let totalString = "Rp " + totalFix.toLocaleString('id-ID');
+                // ---------------------------------------------
+
+                // Logika Tombol Action
+                // Cari bagian ini di dalam function filterOrders(statusFilter)
+// Ubah logika tombol action menjadi seperti ini:
+
+let actionButton = '';
+if (statusFilter === 'Belum Bayar') {
+    actionButton = `
+        <button class="btn-action btn-pay" onclick="alert('Lanjut ke Payment Gateway...')">Bayar Sekarang</button>
+        <button class="btn-action btn-cancel" onclick="cancelOrder('${order.id}')">Batalkan</button>
+    `;
+} else if (statusFilter === 'Dikemas') {
+    actionButton = `
+        <button class="btn-action btn-cancel" onclick="cancelOrder('${order.id}')">Batalkan</button>
+    `;
+} else if (statusFilter === 'Dikirim') {
+    actionButton = `
+        <button class="btn-action btn-track" onclick="alert('Paket sedang di Jakarta DC')">Lacak</button>
+        <button class="btn-action btn-pay" onclick="completeOrder('${order.id}')" style="margin-left:10px;">Pesanan Diterima</button>
+    `;
+} else if (statusFilter === 'Selesai') {
+    actionButton = `<button class="btn-action btn-rate" onclick="alert('Terima kasih!')">Beri Nilai</button>`;
+}
+
+ // TAMBAHKAN INI:
+                else if (statusFilter === 'Dibatalkan') {
+                    actionButton = `
+                        <button class="btn-action" onclick="deleteOrder('${order.id}')" style="background: var(--danger); color: white; border: none;">Hapus Riwayat</button>
+                    `;
+                }
+
+// Cari bagian statusClass, dan tambahkan kondisi dibatalkan:
+let statusClass = 'status-dikemas';
+if(statusFilter === 'Belum Bayar') statusClass = 'status-belum-bayar';
+if(statusFilter === 'Dikirim') statusClass = 'status-dikirim';
+if(statusFilter === 'Selesai') statusClass = 'status-selesai';
+if(statusFilter === 'Dibatalkan') statusClass = 'status-dibatalkan'; // Tambahkan ini
+
+                // ====== WISHLIST BADGE UPDATE ======
+                // Tambahkan di profile.html
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    loadUserProfile();
+                    updateCartBadge();
+                    filterOrders('Belum Bayar');
+                    updateWishlistBadge(); // <-- TAMBAHKAN INI
+                });
+
+                function updateWishlistBadge() {
+                    const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                    const badge = document.querySelector('.wishlist-count');
+                    if (badge) {
+                        badge.textContent = wishlist.length;
+                    }
+                }
+
+                // Render HTML
+                const html = `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div>
+                                <span style="font-weight: 700; margin-right: 10px;">${order.id}</span>
+                                <span style="color: var(--gray); font-size: 0.9rem;">${order.date}</span>
+                            </div>
+                            <span class="order-status ${statusClass}">${order.status}</span>
+                        </div>
+                        <div class="order-item">
+                            <img src="${firstItem.img}" class="item-img">
+                            <div class="item-info">
+                                <h4>${firstItem.name}</h4>
+                                <p>${firstItem.qty} x ${firstItem.price} (Varian: ${firstItem.variant})</p>
+                                <p style="font-size: 0.8rem; margin-top: 2px;">${otherText}</p>
+                            </div>
+                        </div>
+                        <div class="order-footer">
+                            <div>
+                                <div style="font-size: 0.8rem; color: var(--gray);">Total Pesanan (Termasuk Ongkir)</div>
+                                <div class="total-price">${totalString}</div>
+                            </div>
+                            <div>${actionButton}</div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += html;
+            });
+        }
+
+        // ====== WISHLIST BADGE UPDATE ======
+                // Tambahkan di profile.html
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    loadUserProfile();
+                    updateCartBadge();
+                    filterOrders('Belum Bayar');
+                    updateWishlistBadge(); // <-- TAMBAHKAN INI
+                });
+
+                function updateWishlistBadge() {
+                    const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                    const badge = document.querySelector('.wishlist-count');
+                    if (badge) {
+                        badge.textContent = wishlist.length;
+                    }
+                }
+
+        // ====== FUNGSI LOGOUT ======
+        function logout() {
+            if (confirm('Yakin ingin keluar dari akun?')) {
+                // Hapus data login
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+                
+                // Redirect ke halaman login
+                alert('Anda telah berhasil logout!');
+                window.location.href = 'Hal-login.html';
+            }
+        }
+
+        // ====== FUNGSI cencel order ======
+        function cancelOrder(orderId) {
+    if (confirm('Apakah Anda yakin ingin membatalkan pesanan ini?')) {
+        let orderHistory = JSON.parse(localStorage.getItem('technoOrderHistory')) || [];
+        const index = orderHistory.findIndex(o => o.id === orderId);
+        
+        if (index !== -1) {
+            orderHistory[index].status = 'Dibatalkan';
+            localStorage.setItem('technoOrderHistory', JSON.stringify(orderHistory));
+            alert('Pesanan berhasil dibatalkan!');
+            
+            // Refresh tampilan tab yang sedang dibuka
+            const activeTab = document.querySelector('.tab-btn.active').textContent;
+            filterOrders(activeTab);
+        }
+    }
+}
+
+// Fungsi untuk menghapus pesanan secara permanen
+function loadMyReviews() {
+    const container = document.getElementById('my-reviews-container');
+    const currentUser = localStorage.getItem('username');
+    const allReviews = JSON.parse(localStorage.getItem('technoReviews')) || [];
+    
+    // Filter komentar milik user yang login saja
+    const myReviews = allReviews.filter(r => r.username === currentUser);
+
+    if (myReviews.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-comment-slash"></i>
+                <p>Anda belum pernah memberikan ulasan.</p>
+            </div>`;
+        return;
+    }
+
+
+container.innerHTML = '';
+    myReviews.reverse().forEach((rev, index) => {
+        container.innerHTML += `
+            <div class="order-card" style="margin-bottom: 15px; border-left: 4px solid var(--primary);">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="color: var(--primary);">${rev.productId.replace(/-/g, ' ').toUpperCase()}</h4>
+                        <div style="color: var(--warning); margin: 5px 0;">${'⭐'.repeat(rev.rating)}</div>
+                        <p style="font-style: italic; color: var(--light);">"${rev.text}"</p>
+                        <small style="color: var(--gray);">${rev.date}</small>
+                    </div>
+                    <button onclick="deleteMyReview(${index})" style="background: none; border: none; color: var(--danger); cursor: pointer;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+// Fungsi untuk menghapus ulasan tertentu dari riwayat
+function deleteMyReview(index) {
+    if(confirm('Hapus ulasan ini?')) {
+        let allReviews = JSON.parse(localStorage.getItem('technoReviews')) || [];
+        allReviews.splice(index, 1);
+        localStorage.setItem('technoReviews', JSON.stringify(allReviews));
+        loadMyReviews();
+    }
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - Techno Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* CSS SAMA PERSIS SEPERTI SEBELUMNYA */
+:root { 
+    /* NUANSA BARU: HIJAU & PUTIH */
+    --darker: #ffffff;      /* Background Utama Putih Bersih */
+    --dark: #f8fafc;        /* Background Kartu (Abu-abu sangat muda) */
+    
+    /* ACCENT: Hijau Alam/Segar */
+    --primary: #22c55e;      /* Hijau Hijau Segar (Green 500) */
+    --primary-dark: #15803d; /* Hijau Tua (Green 700) */
+    
+    /* TEXT & LAINNYA */
+    --light: #1e293b;       /* Teks Utama (Warna Gelap agar terbaca di bg putih) */
+    --gray: #64748b;        /* Teks pudar/keterangan */
+    --success: #10b981; 
+    --danger: #ef4444; 
+    --warning: #f59e0b; 
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+}
+/* Sisanya biarkan default, warna utama sudah berubah jadi biru */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--darker); color: var(--light); line-height: 1.6; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        .header { 
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2); /* Border hijau tipis */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--light); }
+        .logo span { color: var(--primary); }
+        .page-title { font-size: 1.8rem; margin: 30px 0 20px; font-weight: 700; }
+        .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 60px; }
+        .cart-items { background-color: var(--dark); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .cart-item { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .cart-item:last-child { border-bottom: none; }
+        .item-image { width: 100px; height: 100px; object-fit: cover; border-radius: 8px; background: #2d3748; }
+        .item-details { flex: 1; }
+        .item-name { font-weight: 600; font-size: 1.1rem; margin-bottom: 5px; color: var(--light); text-decoration: none; }
+        .item-variant { font-size: 0.85rem; color: var(--gray); margin-bottom: 10px; }
+        .item-price { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+        .item-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+        .qty-control { display: flex; align-items: center; background: var(--darker); border-radius: 6px; padding: 2px; }
+        .qty-btn { width: 30px; height: 30px; background: transparent; border: none; color: var(--light); cursor: pointer; font-size: 1rem; }
+        .qty-btn:hover { color: var(--primary); }
+        .qty-input { width: 40px; text-align: center; background: transparent; border: none; color: var(--light); font-weight: 600; }
+        .btn-remove { background: transparent; border: none; color: var(--danger); cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; }
+        .btn-remove:hover { text-decoration: underline; }
+        .cart-summary { background-color: var(--dark); border-radius: 12px; padding: 25px; height: fit-content; position: sticky; top: 100px; border: 1px solid rgba(255,255,255,0.05); }
+        .summary-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; color: var(--gray); }
+        .summary-row.total { color: var(--light); font-weight: 800; font-size: 1.3rem; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
+        .btn-checkout { width: 100%; padding: 15px; background-color: var(--success); color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        .btn-checkout:hover { background-color: #059669; }
+        .empty-cart { text-align: center; padding: 50px 20px; display: none; }
+        .empty-cart i { font-size: 4rem; color: var(--gray); margin-bottom: 20px; }
+        .btn-back-shop { display: inline-block; margin-top: 20px; padding: 10px 25px; background: var(--primary); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; }
+        @media (max-width: 768px) { .cart-layout { grid-template-columns: 1fr; } .cart-item { flex-direction: column; gap: 15px; } .item-image { width: 100%; height: 150px; } .item-actions { flex-wrap: wrap; gap: 15px; } }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo"><i class="fas fa-fish"></i> DUNIA<span>MEMANCING</span></a>
+                <div style="color: white;">
+                    <a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-arrow-left"></i> Lanjut Belanja</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Tombol Back -->
+        <div style="margin: 20px 0;">
+            <button onclick="window.location.href='index.html'" 
+                    style="background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; color: var(--gray); font-size: 0.9rem; font-weight: 600; font-family: 'Inter', sans-serif; transition: color 0.3s;">
+                <i class="fas fa-arrow-left" style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 50%;"></i>
+                Kembali
+            </button>
+        </div>
+
+        <h1 class="page-title">Keranjang Belanja (<span id="total-items">0</span>)</h1>
+
+        <!-- Jika Keranjang Kosong -->
+        <div id="empty-state" class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h2>Keranjang Anda Kosong</h2>
+            <p style="color: var(--gray);">Belum ada barang yang ditambahkan.</p>
+            <a href="index.html" class="btn-back-shop">Mulai Belanja</a>
+        </div>
+
+        <!-- Layout Keranjang -->
+        <div class="cart-layout" id="cart-content">
+            <div class="cart-items" id="cart-list"></div>
+            <div class="cart-summary">
+                <h3 class="summary-title">Ringkasan Belanja</h3>
+                <div class="summary-row"><span>Total Harga</span><span id="subtotal">Rp 0</span></div>
+                <div class="summary-row"><span>Pajak (11%)</span><span id="tax">Rp 0</span></div>
+                <div class="summary-row total"><span>Total Tagihan</span><span id="grand-total" style="color: var(--primary);">Rp 0</span></div>
+                <button class="btn-checkout" onclick="alert('Lanjut ke halaman Checkout...')">Checkout Sekarang <i class="fas fa-arrow-right" style="margin-left: 5px;"></i></button>
+            </div>
+        </div>
+    </main>
+
+    <footer style="background-color: #064e3b; padding: 30px 0; margin-top: 60px; text-align: center; color: white !important; font-size: 0.9rem;">
+        <div class="container">&copy; 2024 Techno Store. All rights reserved.</div>
+    </footer>
+
+   <script>
+        let cartData = JSON.parse(localStorage.getItem('technoCart')) || [];
+
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        };
+
+        function renderCart() {
+            const cartList = document.getElementById('cart-list');
+            const emptyState = document.getElementById('empty-state');
+            const cartContent = document.getElementById('cart-content');
+            const totalItemsLabel = document.getElementById('total-items');
+
+            // 1. Cek Jika Kosong
+            if (cartData.length === 0) {
+                if(cartContent) cartContent.style.display = 'none';
+                if(emptyState) emptyState.style.display = 'block';
+                if(totalItemsLabel) totalItemsLabel.textContent = '0';
+                return;
+            }
+
+            // 2. Jika Ada Isi
+            if(cartContent) cartContent.style.display = 'grid';
+            if(emptyState) emptyState.style.display = 'none';
+            if(cartList) cartList.innerHTML = '';
+
+            let subtotal = 0;
+            let totalQty = 0;
+
+            cartData.forEach((item, index) => {
+                subtotal += item.price * item.qty;
+                totalQty += item.qty;
+
+                const html = `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}" class="item-image">
+                        <div class="item-details">
+                            <a href="#" class="item-name">${item.name}</a>
+                            <div class="item-variant">Varian: ${item.variant}</div>
+                            <div class="item-price">${formatRupiah(item.price)}</div>
+                            <div class="item-actions">
+                                <div class="qty-control">
+                                    <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                                    <input type="text" class="qty-input" value="${item.qty}" readonly>
+                                    <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                                </div>
+                                <button class="btn-remove" onclick="removeItem(${index})"><i class="fas fa-trash"></i> Hapus</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                if(cartList) cartList.innerHTML += html;
+            });
+
+            if(totalItemsLabel) totalItemsLabel.textContent = totalQty;
+            
+            // Update Ringkasan Harga
+            const elSubtotal = document.getElementById('subtotal');
+            const elTax = document.getElementById('tax');
+            const elGrand = document.getElementById('grand-total');
+            
+            if(elSubtotal) elSubtotal.textContent = formatRupiah(subtotal);
+            
+            const tax = subtotal * 0.11; // PPN 11%
+            if(elTax) elTax.textContent = formatRupiah(tax);
+            
+            if(elGrand) elGrand.textContent = formatRupiah(subtotal + tax);
+
+            // ====== WISHLIST BADGE UPDATE ======
+            // Tambahkan ini di cart.html untuk update badge wishlist
+
+            document.addEventListener('DOMContentLoaded', function() {
+                renderCart();
+                updateWishlistBadge(); // <-- TAMBAHKAN INI
+            });
+
+            function updateWishlistBadge() {
+                const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                const badge = document.querySelector('.wishlist-count');
+                if (badge) {
+                    badge.textContent = wishlist.length;
+                }
+            }
+
+            // --- PERBAIKAN TOMBOL CHECKOUT ---
+            // Kita cari tombol checkout dan ubah fungsinya secara paksa di sini
+            const btnCheckout = document.querySelector('.btn-checkout');
+            if(btnCheckout) {
+                // Hapus onclick bawaan HTML (alert) dan ganti dengan redirect
+                btnCheckout.removeAttribute('onclick');
+                btnCheckout.onclick = function() {
+                    window.location.href = 'checkout.html';
+                };
+            }
+        }
+
+        function updateQty(index, change) {
+            if (cartData[index].qty + change > 0) {
+                cartData[index].qty += change;
+                saveCart();
+                renderCart();
+            }
+        }
+
+        function removeItem(index) {
+            if(confirm('Hapus barang ini?')) {
+                cartData.splice(index, 1);
+                saveCart();
+                renderCart();
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('technoCart', JSON.stringify(cartData));
+        }
+
+        // Jalankan saat loading
+        document.addEventListener('DOMContentLoaded', renderCart);
+    </script>
+</body>
+</html>

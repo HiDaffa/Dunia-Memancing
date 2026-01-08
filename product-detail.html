@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Detail Produk - Dunia Memancing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- TEMA LAUT (SAMA DENGAN INDEX) --- */
+:root { 
+    /* NUANSA BARU: HIJAU & PUTIH */
+    --darker: #ffffff;      /* Background Utama Putih Bersih */
+    --dark: #f8fafc;        /* Background Kartu (Abu-abu sangat muda) */
+    
+    /* ACCENT: Hijau Alam/Segar */
+    --primary: #22c55e;      /* Hijau Hijau Segar (Green 500) */
+    --primary-dark: #15803d; /* Hijau Tua (Green 700) */
+    
+    /* TEXT & LAINNYA */
+    --light: #1e293b;       /* Teks Utama (Warna Gelap agar terbaca di bg putih) */
+    --gray: #64748b;        /* Teks pudar/keterangan */
+    --success: #10b981; 
+    --danger: #ef4444; 
+    --warning: #f59e0b; 
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
+}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--darker); color: var(--light); line-height: 1.6; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        
+        .header { 
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2); /* Border hijau tipis */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--light); white-space: nowrap; }
+        .logo span { color: var(--primary); }
+        
+        .nav-icons { display: flex; gap: 20px; align-items: center; }
+        .nav-icons a { color: var(--light); font-size: 1.2rem; position: relative; text-decoration: none; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--danger); color: white; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        
+        .breadcrumb { padding: 20px 0; }
+        .breadcrumb button { padding: 8px 16px; background-color: var(--primary); border: none; color: #fff; border-radius: 5px; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.3s; }
+        .breadcrumb button:hover { background-color: var(--primary-dark); }
+
+        .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; margin: 20px 0 60px; }
+        
+        .main-image-wrapper { position: relative; width: 100%; height: 400px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border-radius: 12px; margin-bottom: 20px; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(56, 189, 248, 0.2); }
+        .main-image { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        .product-info h1 { font-size: 2rem; line-height: 1.2; margin: 0; color: var(--light); }
+        .price-section { background-color: var(--dark); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(56, 189, 248, 0.1); }
+        .current-price { font-size: 2.2rem; font-weight: 800; color: var(--primary); }
+        
+        .variant-option { padding: 10px 20px; border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--gray); display: inline-block; margin-right: 10px; margin-bottom: 10px; }
+        .variant-option:hover { border-color: var(--primary); color: var(--light); }
+        .variant-option.selected { background-color: var(--primary); border-color: var(--primary); color: white; font-weight: 600; }
+        
+        .action-buttons { display: flex; gap: 15px; margin-top: 40px; }
+        .btn-cart { flex: 2; padding: 15px; background-color: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.3s; }
+        .btn-cart:hover { background-color: var(--primary); color: white; }
+        .btn-buy { flex: 1; padding: 15px; background-color: var(--success); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        .btn-wishlist-detail {
+            background: transparent; border: 1px solid var(--warning);
+            color: var(--warning); padding: 15px; border-radius: 8px;
+        }
+        .btn-wishlist-detail.active {
+            background: var(--danger); border-color: var(--danger); color: white;
+        }
+
+        .specs-box { margin-top: 30px; background: rgba(255,255,255,0.03); border-radius: 12px; padding: 20px; border: 1px solid rgba(56, 189, 248, 0.1); }
+        .specs-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .footer { background-color: #064e3b; padding: 50px 0 20px; margin-top: 60px; border-top: 1px solid rgba(34, 197, 94, 0.1); text-align: center; color: white !important; }
+        
+        @media (max-width: 992px) { .product-detail { grid-template-columns: 1fr; gap: 30px; } }
+
+        .review-item {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+}
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.review-user { font-weight: 700; color: var(--light); }
+.review-date { font-size: 0.8rem; color: var(--gray); }
+.review-stars { color: var(--warning); margin-bottom: 5px; }
+.review-text { font-size: 0.95rem; color: #444; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo"><i class="fas fa-fish"></i> DUNIA<span>MEMANCING</span></a>
+                <div class="nav-icons">
+                    <a href="index.html" title="Home"><i class="fas fa-home"></i></a>
+                    <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="breadcrumb">
+            <button onclick="window.location.href='index.html'"><i class="fas fa-arrow-left"></i> Kembali ke Toko</button>
+        </div>
+
+        <div class="product-detail">
+            <!-- GALLERY -->
+            <div class="product-gallery">
+                <div class="main-image-wrapper">
+                    <img src="" alt="Product Image" class="main-image" id="detail-img">
+                </div>
+            </div>
+
+            <!-- INFO -->
+            <div class="product-info">
+                <h1 id="detail-title">Loading...</h1>
+                <div style="margin-bottom: 20px; color: var(--warning);"><i class="fas fa-star"></i> 4.8 (Ulasan Pemancing)</div>
+
+                <div class="price-section">
+                    <span class="current-price" id="detail-price">Rp 0</span>
+                </div>
+
+                <!-- VARIAN (Disesuaikan untuk Pancing) -->
+                <div style="margin-bottom: 25px;">
+                    <div style="font-weight: 600; margin-bottom: 10px; color: var(--light);">Pilih Ukuran/Warna:</div>
+                    <div class="variant-options">
+                        <div class="variant-option selected">Standar</div>
+                        <div class="variant-option">Warna Laut</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <!-- TAMBAH tombol di action buttons: -->
+                    <button class="btn-wishlist-detail" id="btn-wishlist" onclick="toggleWishlistDetail()">
+                        <i class="far fa-heart"></i> Wishlist
+                    </button>
+                    <button class="btn-cart" id="btn-add-cart"><i class="fas fa-cart-plus"></i> Tambah Keranjang</button>
+                    <button class="btn-buy" id="btn-buy-now"><i class="fas fa-bolt"></i> Beli Sekarang</button>
+                </div>
+                
+                <div class="specs-box">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);">Spesifikasi Teknis</h3>
+                    <ul class="specs-list" id="detail-specs" style="list-style: none; padding: 0;"></ul>
+                </div>
+            </div>
+        </div>
+        <!-- END PRODUCT DETAIL -->
+        
+        <!-- SECTION KOMENTAR -->
+<div class="reviews-container" style="margin-top: 50px; border-top: 1px solid #eee; padding-top: 30px;">
+    <h2 style="margin-bottom: 20px;">Ulasan Pembeli</h2>
+
+    <!-- Form Input Komentar -->
+    <div id="comment-form" style="background: var(--dark); padding: 20px; border-radius: 12px; margin-bottom: 30px;">
+        <h4 style="margin-bottom: 15px;">Tulis Ulasan Anda</h4>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px;">Rating:</label>
+            <select id="rev-rating" style="padding: 8px; border-radius: 5px; border: 1px solid #ddd; width: 100%; max-width: 200px;">
+                <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                <option value="3">⭐⭐⭐ (3/5)</option>
+                <option value="2">⭐⭐ (2/5)</option>
+                <option value="1">⭐ (1/5)</option>
+            </select>
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px;">Komentar:</label>
+            <textarea id="rev-text" rows="4" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit;" placeholder="Bagaimana kualitas alat pancing ini?"></textarea>
+        </div>
+        <button onclick="submitReview()" style="background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer;">Kirim Ulasan</button>
+    </div>
+
+    <!-- Daftar Komentar yang Muncul -->
+    <div id="reviews-list">
+        <!-- Komentar akan muncul di sini via JS -->
+    </div>
+</div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">&copy; 2024 Dunia Memancing. Professional Fishing Gear.</div>
+    </footer>
+
+    <!-- Tombol Floating Chat -->
+<div id="chat-icon" onclick="toggleChat()" style="position: fixed; bottom: 20px; right: 20px; background: #22c55e; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <i class="fas fa-comments"></i>
+</div>
+
+<!-- Jendela Chat -->
+<div id="chat-window" style="position: fixed; bottom: 90px; right: 20px; width: 300px; height: 400px; background: white; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; z-index: 2000; border: 1px solid #eee; font-family: 'Inter', sans-serif;">
+    <div style="background: #22c55e; color: white; padding: 15px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+        <span><i class="fas fa-robot"></i> Bang Pancing</span>
+        <i class="fas fa-times" onclick="toggleChat()" style="cursor: pointer;"></i>
+    </div>
+    <div id="chat-body" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; background: #f8fafc;">
+        <div style="background: #e2e8f0; color: #1e293b; padding: 8px 12px; border-radius: 10px; align-self: flex-start; max-width: 80%; margin-bottom: 10px; font-size: 0.9rem;">
+            Halo! Ada yang bisa dibantu? <br>Tanya: <b>joran, reel, atau promo</b>.
+        </div>
+    </div>
+    <div style="padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; background: white;">
+        <input type="text" id="chat-input" placeholder="Ketik pesan..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; font-size: 0.9rem;">
+        <button onclick="sendChatMessage()" style="background: #22c55e; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+    <script>
+        // DATA PRODUK (SAMA PERSIS DENGAN INDEX)
+        const productsDB = {
+            'reel-stella': { 
+                name: 'Reel Shimano Stella SW 10000', price: 12500000, 
+                img: 'GBR/1.webp',
+                specs: { "Gear Ratio": "4.9:1", "Weight": "655g", "Max Drag": "25kg", "Bearing": "13+1" }
+            },
+            'joran-carbon': { 
+                name: 'Joran Carbon Maguro Extreme', price: 850000, 
+                img: 'GBR/2.jpg',
+                specs: { "Material": "High Carbon", "Length": "180cm", "Line Weight": "8-17lb", "Section": "2 Pieces" }
+            },
+            'tas-pancing': { 
+                name: 'Tas Rod Case Waterproof', price: 250000, 
+                img: 'GBR/3.webp',
+                specs: { "Material": "ABS Hard Shell", "Panjang": "120cm", "Kapasitas": "2 Set Joran" }
+            },
+            'joran-daiwa': { 
+                name: 'Joran Daiwa Crossfire 210cm', price: 650000, 
+                img: 'GBR/4.jpg',
+                specs: { "Type": "Spinning", "Action": "Medium Heavy", "Lure Wt": "10-40g" }
+            },
+            'reel-ryobi': { 
+                name: 'Reel Ryobi Zeus HP 4000', price: 780000, 
+                img: 'GBR/5.jpg',
+                specs: { "Ratio": "5.0:1", "Drag": "Max 5kg", "Handle": "Power Handle" }
+            },
+            'kail-carbon': { 
+                name: 'Kail Pancing Carbon (Isi 50)', price: 45000, 
+                img: 'GBR/6.webp',
+                specs: { "Material": "High Carbon Steel", "Size": "Mix 3-12", "Type": "Barbed" }
+            },
+            'pelampung': { 
+                name: 'Pelampung Fosfor Malam', price: 15000, 
+                img: 'GBR/7.jpg',
+                specs: { "Fitur": "Glow in Dark", "Baterai": "CR425 (Termasuk)", "Warna": "Hijau Neon" }
+            },
+            'timah': { 
+                name: 'Set Timah Pemberat (J8-J12)', price: 35000, 
+                img: 'GBR/8.jpg',
+                specs: { "Berat Total": "500gr", "Jenis": "Timah Lonceng", "Isi": "10 pcs" }
+            },
+            'umpan-lure': { 
+                name: 'Minnow Lure 12gr', price: 55000, 
+                img: 'GBR/9.webp',
+                specs: { "Action": "Sinking", "Hooks": "Treble Hook #6", "Target": "Hampala/Gabus" }
+            },
+            'senar-pe': { 
+                name: 'Senar PE X8 Braided 300m', price: 120000, 
+                img: 'GBR/10.jpg',
+                specs: { "Diameter": "0.23mm", "Strength": "30lb", "Warna": "Multicolor" }
+            }
+        };
+
+        const formatRupiah = (number) => {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(number);
+        };
+
+        function showProduct() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('product');
+            const productData = productsDB[productId];
+            
+            if (!productData) { document.getElementById('detail-title').textContent = "Produk Tidak Ditemukan"; return; }
+
+            document.getElementById('pageTitle').textContent = `${productData.name} - Dunia Memancing`;
+            document.getElementById('detail-title').textContent = productData.name;
+            document.getElementById('detail-price').textContent = formatRupiah(productData.price);
+            document.getElementById('detail-img').src = productData.img;
+
+            const specsContainer = document.getElementById('detail-specs');
+            specsContainer.innerHTML = ''; 
+            if (productData.specs) {
+                for (const [key, value] of Object.entries(productData.specs)) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span style="color:var(--gray)">${key}</span> <span style="color:var(--light); font-weight:600">${value}</span>`;
+                    specsContainer.appendChild(li);
+                }
+            }
+
+            // ====== WISHLIST FUNCTIONS FOR DETAIL PAGE ======
+
+            // Toggle wishlist dari halaman detail
+        /*    function toggleWishlistDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('product');
+                const product = productsDB[productId];
+                
+                if (!product) return;
+                
+                // Cek login
+                if (localStorage.getItem('isLoggedIn') !== 'true') {
+                    alert('Silakan login terlebih dahulu untuk menambahkan ke wishlist!');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                let wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                const btn = document.getElementById('btn-wishlist');
+                
+                // Cek apakah sudah ada di wishlist
+                const existingIndex = wishlist.findIndex(item => item.id === productId);
+                
+                if (existingIndex > -1) {
+                    // Hapus dari wishlist
+                    wishlist.splice(existingIndex, 1);
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="far fa-heart"></i> Wishlist';
+                    alert('❌ Dihapus dari wishlist!');
+                } else {
+                    // Tambah ke wishlist
+                    wishlist.push({
+                        id: productId,
+                        name: product.name,
+                        price: product.price,
+                        img: product.img,
+                        variant: 'Standar',
+                        addedDate: new Date().toISOString()
+                    });
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fas fa-heart"></i> Dalam Wishlist';
+                    alert('❤️ Ditambahkan ke wishlist!');
+                }
+                
+                localStorage.setItem('technoWishlist', JSON.stringify(wishlist));
+                updateWishlistBadge();
+            }*/
+
+            // Cek status wishlist saat load halaman detail
+        /*    function checkWishlistDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('product');
+                const btn = document.getElementById('btn-wishlist');
+                
+                if (btn && productId) {
+                    let wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                    if (wishlist.some(item => item.id === productId)) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '<i class="fas fa-heart"></i> Dalam Wishlist';
+                    }
+                }
+            }*/
+
+            // ====== UPDATE EVENT LISTENERS ======
+            // Tambahkan ini ke event listener yang sudah ada
+        /*  document.addEventListener('DOMContentLoaded', function() {
+                showProduct();
+                updateCartBadge();
+                updateWishlistBadge();
+                checkWishlistDetail(); // <-- TAMBAHKAN INI
+            });*/
+
+            // Bind Buttons
+            document.getElementById('btn-add-cart').onclick = function() { addToCart(productId, false); };
+            document.getElementById('btn-buy-now').onclick = function() { addToCart(productId, true); };
+        }
+
+        function addToCart(productId, isBuyNow) {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                alert('Silakan login dulu.'); window.location.href = 'Hal-Login.html'; return;
+            }
+            const product = productsDB[productId];
+            let cart = JSON.parse(localStorage.getItem('technoCart')) || [];
+            const existing = cart.find(i => i.id === productId);
+            if(existing) existing.qty++; else cart.push({id: productId, name: product.name, price: product.price, img: product.img, variant: 'Std', qty: 1});
+            localStorage.setItem('technoCart', JSON.stringify(cart));
+            updateCartBadge();
+            if(isBuyNow) window.location.href='checkout.html'; else alert("Masuk keranjang!");
+        }
+        
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('technoCart')) || [];
+            let total = 0; cart.forEach(i => total += i.qty);
+            document.querySelector('.cart-count').textContent = total;
+        }
+
+        function toggleWishlistDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('product');
+                const product = productsDB[productId];
+                
+                if (!product) return;
+                
+                // Cek login
+                if (localStorage.getItem('isLoggedIn') !== 'true') {
+                    alert('Silakan login terlebih dahulu untuk menambahkan ke wishlist!');
+                    window.location.href = 'Hal-Login.html';
+                    return;
+                }
+
+                let wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                const btn = document.getElementById('btn-wishlist');
+                
+                // Cek apakah sudah ada di wishlist
+                const existingIndex = wishlist.findIndex(item => item.id === productId);
+                
+                if (existingIndex > -1) {
+                    // Hapus dari wishlist
+                    wishlist.splice(existingIndex, 1);
+                    btn.classList.remove('active');
+                    btn.innerHTML = '<i class="far fa-heart"></i> Wishlist';
+                    alert('❌ Dihapus dari wishlist!');
+                } else {
+                    // Tambah ke wishlist
+                    wishlist.push({
+                        id: productId,
+                        name: product.name,
+                        price: product.price,
+                        img: product.img,
+                        variant: 'Standar',
+                        addedDate: new Date().toISOString()
+                    });
+                    btn.classList.add('active');
+                    btn.innerHTML = '<i class="fas fa-heart"></i> Dalam Wishlist';
+                    alert('❤️ Ditambahkan ke wishlist!');
+                }
+                
+                localStorage.setItem('technoWishlist', JSON.stringify(wishlist));
+                updateWishlistBadge();
+            }
+
+        function updateWishlistBadge() {
+            const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+            const badge = document.querySelector('.wishlist-count');
+            if (badge) {
+                badge.textContent = wishlist.length;
+            }
+        }
+
+        function checkWishlistDetail() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const productId = urlParams.get('product');
+                const btn = document.getElementById('btn-wishlist');
+                
+                if (btn && productId) {
+                    let wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+                    if (wishlist.some(item => item.id === productId)) {
+                        btn.classList.add('active');
+                        btn.innerHTML = '<i class="fas fa-heart"></i> Dalam Wishlist';
+                    }
+                }
+            }
+
+    // ====== FUNGSI ULASAN ======
+// Fungsi untuk memuat komentar berdasarkan ID Produk
+function loadReviews() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('product');
+    const reviewsList = document.getElementById('reviews-list');
+    
+    // Ambil data dari LocalStorage
+    let allReviews = JSON.parse(localStorage.getItem('technoReviews')) || [];
+    
+    // Filter komentar hanya untuk produk ini
+    let productReviews = allReviews.filter(r => r.productId === productId);
+    
+    if (productReviews.length === 0) {
+        reviewsList.innerHTML = '<p style="color: var(--gray);">Belum ada ulasan untuk produk ini. Jadi yang pertama mengulas!</p>';
+        return;
+    }
+
+    reviewsList.innerHTML = '';
+    productReviews.reverse().forEach(rev => {
+        let stars = '⭐'.repeat(rev.rating);
+        reviewsList.innerHTML += `
+            <div class="review-item">
+                <div class="review-header">
+                    <span class="review-user"><i class="fas fa-user-circle"></i> ${rev.username}</span>
+                    <span class="review-date">${rev.date}</span>
+                </div>
+                <div class="review-stars">${stars}</div>
+                <div class="review-text">${rev.text}</div>
+            </div>
+        `;
+    });
+}
+
+// Fungsi untuk mengirim komentar baru
+function submitReview() {
+    // Cek Login
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        alert('Anda harus login terlebih dahulu untuk memberikan ulasan!');
+        window.location.href = 'Hal-Login.html';
+        return;
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('product');
+    const rating = document.getElementById('rev-rating').value;
+    const text = document.getElementById('rev-text').value;
+    const username = localStorage.getItem('username') || 'Pembeli';
+
+    if (!text.trim()) {
+        alert('Tuliskan komentar Anda terlebih dahulu!');
+        return;
+    }
+
+    // Buat objek ulasan baru
+    const newReview = {
+    productId: productId,
+    productName: document.getElementById('detail-title').textContent, // Tambahkan ini
+    username: username,
+    rating: parseInt(rating),
+    text: text,
+    date: new Date().toLocaleDateString('id-ID', { year:'numeric', month:'long', day:'numeric' })
+};
+
+    // Simpan ke LocalStorage
+    let allReviews = JSON.parse(localStorage.getItem('technoReviews')) || [];
+    allReviews.push(newReview);
+    localStorage.setItem('technoReviews', JSON.stringify(allReviews));
+
+    // Reset Form & Refresh ulasan
+    document.getElementById('rev-text').value = '';
+    alert('Terima kasih! Ulasan Anda telah diposting.');
+    loadReviews();
+}
+
+    // ====== FUNGSI CHATBOT ======
+function toggleChat() {
+    const chatWindow = document.getElementById('chat-window');
+    chatWindow.style.display = chatWindow.style.display === 'none' || chatWindow.style.display === '' ? 'flex' : 'none';
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const body = document.getElementById('chat-body');
+    const msg = input.value.trim().toLowerCase();
+    if (msg === "") return;
+
+    body.innerHTML += `<div style="background: #22c55e; color: white; padding: 8px 12px; border-radius: 10px; align-self: flex-end; max-width: 80%; margin-bottom: 5px;">${input.value}</div>`;
+    input.value = ""; 
+    body.scrollTop = body.scrollHeight;
+
+    setTimeout(() => {
+        let reply = "Maaf, Bang Pancing kurang paham. Coba tanya: joran, reel, atau promo.";
+        if (msg.includes("joran")) reply = "Joran Carbon Maguro lagi best seller nih!";
+        else if (msg.includes("reel")) reply = "Reel Shimano Stella lagi diskon 20% lho.";
+        else if (msg.includes("promo")) reply = "Cek banner Promo Ombak Besar di atas ya!";
+        body.innerHTML += `<div style="background: #e2e8f0; color: #1e293b; padding: 8px 12px; border-radius: 10px; align-self: flex-start; max-width: 80%; margin-bottom: 5px;">${reply}</div>`;
+        body.scrollTop = body.scrollHeight;
+    }, 1000);
+}
+
+        document.addEventListener('DOMContentLoaded', function() { showProduct(); updateCartBadge(); updateWishlistBadge(); checkWishlistDetail(); loadReviews(); 
+        // Tambahkan ini agar bisa Enter di chat
+    const chatInput = document.getElementById('chat-input');
+    if(chatInput) {
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        });
+    }
+});
+
+    </script>
+</body>
+</html>

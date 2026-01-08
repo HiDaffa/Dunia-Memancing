@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dunia Memancing - Toko Pancing Terlengkap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+    --darker: #ffffff;      /* Putih */
+    --dark: #f8fafc;        /* Background Kartu Abu Muda */
+    --primary: #22c55e;      /* Hijau */
+    --primary-dark: #16a34a; /* Hijau Tua */
+    --light: #0f172a;       /* Teks Gelap */
+    --gray: #64748b;        /* Teks Pudar */
+    --success: #10b981; 
+    --danger: #ef4444; 
+    --warning: #f59e0b; 
+}
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--darker); color: var(--light); line-height: 1.6; overflow-x: hidden; }
+        .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header dengan Efek Kaca Biru */
+        .header { 
+    background-color: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    position: sticky; 
+    top: 0; 
+    z-index: 1000; 
+    border-bottom: 1px solid rgba(34, 197, 94, 0.2); /* Border hijau tipis */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+        .navbar { display: flex; align-items: center; justify-content: space-between; padding: 15px 0; }
+        .logo { font-size: 1.8rem; font-weight: 800; text-decoration: none; color: var(--light); white-space: nowrap; }
+        .logo span { color: var(--primary); }
+        
+        .search-box { display: flex; flex: 0 1 600px; margin: 0 30px; }
+        .search-box input { 
+    flex: 1; 
+    padding: 12px 20px; 
+    border: 1px solid #e2e8f0; /* Tambahkan border */
+    border-radius: 8px 0 0 8px; 
+    background-color: #f1f5f9; /* Background input agak abu */
+    color: var(--light); 
+    font-size: 0.95rem; 
+}
+        .search-box button { background-color: var(--primary); color: white; border: none; padding: 0 20px; border-radius: 0 8px 8px 0; cursor: pointer; transition: 0.3s; }
+        .search-box button:hover { background-color: var(--primary-dark); }
+
+        .nav-icons { display: flex; gap: 20px; align-items: center; }
+        .nav-icons a { color: var(--light); font-size: 1.2rem; position: relative; text-decoration: none; }
+        .cart-count { position: absolute; top: -8px; right: -8px; background-color: var(--danger); color: white; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        
+        .auth-btn { font-size: 0.9rem; font-weight: 600; color: var(--light); text-decoration: none; transition: 0.3s; }
+        .auth-btn:hover { color: var(--primary); }
+        .auth-btn.register { background: var(--primary); padding: 8px 20px; border-radius: 20px; color: white; }
+        
+        /* Produk Card Nuansa Laut */
+        .product-card { 
+    background-color: #ffffff; /* Putih murni */
+    border-radius: 12px; 
+    overflow: hidden; 
+    transition: all 0.3s; 
+    border: 1px solid #e2e8f0; /* Border abu-abu halus */
+    flex: 0 0 calc(20% - 20px); 
+    min-width: 220px; 
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: var(--shadow);
+}
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(14, 165, 233, 0.15); border-color: var(--primary); }
+        
+        .product-image-container { 
+    position: relative; 
+    height: 180px; 
+    overflow: hidden; 
+    background-color: #f8fafc; /* Background foto produk */
+}
+        .product-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .product-image:hover { transform: scale(1.05); }
+        .product-image-link { display: block; height: 100%; text-decoration: none; }
+        
+        .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .product-title-link { text-decoration: none; color: inherit; }
+        .product-title { font-weight: 600; margin-bottom: 8px; font-size: 0.9rem; height: 40px; overflow: hidden; line-height: 1.3; transition: color 0.3s; }
+        .product-title-link:hover .product-title { color: var(--primary); }
+        
+        .product-price { font-weight: 800; font-size: 1.1rem; color: var(--primary); margin-bottom: 5px; }
+        .product-price-discount { color: var(--gray); text-decoration: line-through; font-size: 0.85rem; font-weight: 400; margin-left: 5px; }
+        .product-rating { color: var(--warning); font-size: 0.85rem; margin-bottom: 8px; }
+        
+        .product-buttons { display: flex; gap: 10px; margin-top: auto; padding-top: 10px; }
+        .btn-add-cart { flex: 1; padding: 10px; background-color: transparent; border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.85rem; }
+        .btn-add-cart:hover { background-color: var(--primary); color: white; }
+        .btn-buy-now { flex: 1; padding: 10px; background-color: var(--success); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.85rem; }
+        
+        .btn-wishlist {
+            position: absolute; top: 10px; right: 10px;
+            background: white; color: var(--primary);
+            width: 36px; height: 36px; border-radius: 50%;
+            border: none; cursor: pointer; z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-wishlist.active { background: var(--danger); color: white; }
+        .btn-wishlist.active i { color: white; }
+
+        .flash-badge { position: absolute; top: 10px; left: 10px; background-color: var(--danger); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; z-index: 2; }
+        
+        .products-container { display: flex; gap: 25px; overflow-x: auto; padding: 20px 5px 30px; scrollbar-width: thin; scrollbar-color: var(--primary) var(--dark); }
+        .products-container::-webkit-scrollbar { height: 8px; }
+        .products-container::-webkit-scrollbar-track { background: var(--dark); border-radius: 4px; }
+        .products-container::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 4px; }
+        
+        /* Banner & Categories */
+        .section-title { font-size: 1.8rem; margin: 40px 0 20px; display: flex; align-items: center; gap: 10px; color: var(--light); }
+        .section-title i { color: var(--primary); }
+        
+        .category-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 15px; margin: 30px 0; }
+        .category-card { background-color: var(--dark); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; border: 1px solid rgba(56, 189, 248, 0.1); }
+        .category-card:hover { background-color: var(--primary-dark); transform: translateY(-3px); border-color: var(--primary); }
+        .category-card i { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+        .category-card:hover i { color: white; }
+        
+        .flash-sale-banner { 
+    background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); /* Gradient Hijau */
+    border-radius: 16px; 
+    padding: 25px; 
+    margin: 30px 0; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border: none;
+}
+
+.flash-countdown { 
+    background: rgba(255, 255, 255, 0.2); /* Lebih terang */
+    padding: 15px 25px; 
+    border-radius: 10px; 
+    font-size: 1.5rem; 
+    font-weight: 700; 
+    color: white;
+}
+        
+        .banner-slider { height: 350px; background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80'); background-size: cover; background-position: center; border-radius: 16px; margin: 25px 0; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .banner-content { text-align: center; padding: 0 20px; z-index: 2; }
+        .banner-title { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; color: #e2e8f0; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .btn-primary { background-color: var(--primary); color: white; padding: 12px 30px; border-radius: 8px; font-weight: 700; text-decoration: none; display: inline-block; transition: transform 0.3s; }
+        .btn-primary:hover { background-color: var(--primary-dark); transform: scale(1.05); }
+        
+        .footer { 
+    background-color: #064e3b; /* Hijau Emerald sangat tua */
+    padding: 50px 0 20px; 
+    margin-top: 60px; 
+    border-top: 1px solid rgba(34, 197, 94, 0.1); 
+    color: white !important;
+}
+        .footer-links a { display: block; color: #ecfdf5 !important; text-decoration: none; margin-bottom: 10px; transition: 0.3s; }
+        .footer-links a:hover { color: #ecfdf5 !important; }
+        
+        @media (max-width: 768px) { .banner-title { font-size: 1.8rem; } .flash-sale-banner { flex-direction: column; text-align: center; gap: 15px; } }
+    </style>
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo"><i class="fas fa-fish"></i> DUNIA<span>MEMANCING</span></a>
+                <div class="search-box">
+                    <input type="text" placeholder="Cari joran, reel, umpan...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="nav-icons">
+                    <!-- TAMBAH di Header (dalam .nav-icons): -->
+                    <a href="wishlist.html" title="Wishlist" class="wishlist-icon">
+                        <i class="far fa-heart"></i>
+                        <span class="wishlist-count">0</span>
+                    </a>
+                    <a href="cart.html" class="cart-icon" title="Keranjang">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                    <div id="auth-buttons" style="display: flex; gap: 15px; align-items: center;">
+                        <a href="Hal-Login.html" class="auth-btn">Masuk</a>
+                        <a href="Hal-Login.html" class="auth-btn register">Daftar</a>
+                    </div>
+                    <a href="profile.html" id="user-icon" title="Akun Saya" style="display: none;">
+                        <i class="fas fa-user-circle" style="font-size: 1.8rem;"></i>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Banner Promo Laut -->
+        <section class="banner-slider">
+            <div class="banner-content">
+                <h1 class="banner-title">TAK ADA IKAN YANG MUSTAHIL</h1>
+                <p class="banner-subtitle" style="font-size: 1.2rem; color: #ecfdf5; margin-bottom: 25px;">Lengkapi gear memancingmu dengan kualitas terbaik dan harga bersahabat.</p>
+                <a href="#featured" class="btn-primary">BELANJA SEKARANG</a>
+            </div>
+        </section>
+        
+        <!-- Kategori Produk (Updated Icons) -->
+        <section>
+            <div class="category-cards">
+                <div class="category-card" onclick="showCategory('joran')"><i class="fas fa-slash"></i><p>Joran</p></div> 
+                <div class="category-card" onclick="showCategory('reel')"><i class="fas fa-compact-disc"></i><p>Reel</p></div>              
+                <div class="category-card" onclick="showCategory('aksesoris')"><i class="fas fa-anchor"></i><p>Aksesoris</p></div>
+                <div class="category-card" onclick="showCategory('kail')"><i class="fas fa-check"></i><p>Kail</p></div>
+                <div class="category-card" onclick="showCategory('umpan')"><i class="fas fa-bug"></i><p>Umpan</p></div>
+            </div>
+            <div style="text-align: center; margin-top: 10px;">
+                <button onclick="showCategory('all')" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 5px 15px; border-radius: 20px; cursor: pointer;">Tampilkan Semua</button>
+            </div>
+        </section>
+        
+        <!-- Flash Sale Section -->
+        <section id="featured">
+            <div class="flash-sale-banner">
+                <div>
+                    <h2 class="flash-sale-title"><i class="fas fa-bolt"></i> PROMO OMBAK BESAR</h2>
+                    <p style="opacity: 0.9; margin-top: 5px;">Diskon spesial perlengkapan laut dalam!</p>
+                </div>
+                <div class="flash-countdown" id="countdown">05:12:45</div>
+            </div>
+            
+            <div class="products-container">
+                <!-- Produk 1: Reel -->
+                <div class="product-card" data-brand="reel">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('reel-stella')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="flash-badge">20%</div>
+                        <a href="product-detail.html?product=reel-stella" class="product-image-link">
+                            <img src="GBR/1.webp" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <a href="product-detail.html?product=reel-stella" class="product-title-link">
+                            <h3 class="product-title">Reel Shimano Stella SW 10000</h3>
+                        </a>
+                        <div class="product-price">Rp 12.500.000 <span class="product-price-discount">Rp 15.000.000</span></div>
+                        <div class="product-rating"><i class="fas fa-star"></i> 5.0 | Terjual 54</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('reel-stella')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('reel-stella')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Produk 2: Joran -->
+                <div class="product-card" data-brand="joran">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('joran-carbon')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <div class="flash-badge">10%</div>
+                        <a href="product-detail.html?product=joran-carbon" class="product-image-link">
+                            <img src="GBR/2.jpg" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <a href="product-detail.html?product=joran-carbon" class="product-title-link">
+                            <h3 class="product-title">Joran Carbon Maguro Extreme</h3>
+                        </a>
+                        <div class="product-price">Rp 850.000 <span class="product-price-discount">Rp 950.000</span></div>
+                        <div class="product-rating"><i class="fas fa-star"></i> 4.8 | Terjual 210</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('joran-carbon')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('joran-carbon')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produk 3: Tas -->
+                <div class="product-card" data-brand="aksesoris">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('tas-pancing')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=tas-pancing" class="product-image-link">
+                            <img src="GBR/3.webp" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <a href="product-detail.html?product=tas-pancing" class="product-title-link">
+                            <h3 class="product-title">Tas Rod Case Waterproof 120cm</h3>
+                        </a>
+                        <div class="product-price">Rp 250.000</div>
+                        <div class="product-rating"><i class="fas fa-star"></i> 4.7 | Terjual 400</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('tas-pancing')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('tas-pancing')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KOLEKSI LENGKAP -->
+        <section>
+            <div class="section-title"><i class="fas fa-fish"></i> Koleksi Peralatan</div>
+            <div class="products-container" style="flex-wrap: wrap; overflow: visible;">
+                
+                <!-- 4. Joran Daiwa -->
+                <div class="product-card" data-brand="joran">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('joran-daiwa')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=joran-daiwa" class="product-image-link">
+                            <img src="GBR/4.jpg" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Joran Daiwa Crossfire 210cm</h3>
+                        <div class="product-price">Rp 650.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('joran-daiwa')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('joran-daiwa')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Reel Ryobi -->
+                <div class="product-card" data-brand="reel">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('reel-ryobi')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=reel-ryobi" class="product-image-link">
+                            <img src="GBR/5.jpg" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Reel Ryobi Zeus HP 4000</h3>
+                        <div class="product-price">Rp 780.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('reel-ryobi')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('reel-ryobi')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Kail Carbon -->
+                <div class="product-card" data-brand="kail">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('kail-carbon')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=kail-carbon" class="product-image-link">
+                            <img src="GBR/6.webp" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Kail Pancing Carbon (Isi 50)</h3>
+                        <div class="product-price">Rp 45.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('kail-carbon')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('kail-carbon')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Kumbul/Pelampung -->
+                <div class="product-card" data-brand="aksesoris">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('pelampung')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=pelampung" class="product-image-link">
+                            <img src="GBR/7.jpg" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Pelampung Fosfor Malam</h3>
+                        <div class="product-price">Rp 15.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('pelampung')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('pelampung')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8. Timah -->
+                <div class="product-card" data-brand="aksesoris">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('timah')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=timah" class="product-image-link">
+                            <img src="GBR/8.jpg" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Set Timah Pemberat (J8-J12)</h3>
+                        <div class="product-price">Rp 35.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('timah')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('timah')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. Umpan Lure -->
+                <div class="product-card" data-brand="umpan">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('umpan-lure')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=umpan-lure" class="product-image-link">
+                            <img src="GBR/9.webp" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Minnow Lure 12gr (Umpan Tiruan)</h3>
+                        <div class="product-price">Rp 55.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('umpan-lure')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('umpan-lure')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 10. Senar PE -->
+                <div class="product-card" data-brand="aksesoris">
+                    <div class="product-image-container">
+                        <!-- TAMBAH di setiap Product Card (dalam .product-image-container): -->
+                        <button class="btn-wishlist" onclick="toggleWishlist('senar-pe')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <a href="product-detail.html?product=senar-pe" class="product-image-link">
+                            <img src="GBR/10.jpg" class="product-image">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Senar PE X8 Braided 300m</h3>
+                        <div class="product-price">Rp 120.000</div>
+                        <div class="product-buttons">
+                            <button class="btn-add-cart" onclick="addToCart('senar-pe')"><i class="fas fa-plus"></i></button>
+                            <button class="btn-buy-now" onclick="buyNow('senar-pe')">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div style="text-align: center; color: white !important;">
+                <h3>DUNIA MEMANCING</h3>
+                <p>Menyediakan perlengkapan pancing terbaik untuk laut, sungai, dan danau.</p>
+                <div style="margin-top: 20px;">
+                    <i class="fab fa-facebook fa-lg" style="margin: 0 10px;"></i>
+                    <i class="fab fa-instagram fa-lg" style="margin: 0 10px;"></i>
+                    <i class="fab fa-whatsapp fa-lg" style="margin: 0 10px;"></i>
+                </div>
+                <p style="color: #e2e8f0; margin-top: 20px; font-size: 0.8rem;">&copy; 2024 Dunia Memancing. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tombol Floating Chat -->
+<div id="chat-icon" onclick="toggleChat()" style="position: fixed; bottom: 20px; right: 20px; background: #22c55e; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+    <i class="fas fa-comments"></i>
+</div>
+
+<!-- Jendela Chat -->
+<div id="chat-window" style="position: fixed; bottom: 90px; right: 20px; width: 300px; height: 400px; background: white; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); display: none; flex-direction: column; overflow: hidden; z-index: 2000; border: 1px solid #eee; font-family: 'Inter', sans-serif;">
+    <div style="background: #22c55e; color: white; padding: 15px; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+        <span><i class="fas fa-robot"></i> Bang Pancing</span>
+        <i class="fas fa-times" onclick="toggleChat()" style="cursor: pointer;"></i>
+    </div>
+    <div id="chat-body" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; background: #f8fafc;">
+        <div style="background: #e2e8f0; color: #1e293b; padding: 8px 12px; border-radius: 10px; align-self: flex-start; max-width: 80%; margin-bottom: 10px; font-size: 0.9rem;">
+            Halo! Ada yang bisa dibantu? <br>Tanya: <b>joran, reel, atau promo</b>.
+        </div>
+    </div>
+    <div style="padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px; background: white;">
+        <input type="text" id="chat-input" placeholder="Ketik pesan..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px; outline: none; font-size: 0.9rem;">
+        <button onclick="sendChatMessage()" style="background: #22c55e; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+    <script>
+        // 1. DATA PRODUK BARU (10 ITEMS PANCING)
+        const productsDB = {
+            'reel-stella': { name: 'Reel Shimano Stella SW 10000', price: 12500000, img: 'GBR/1.webp' },
+            'joran-carbon': { name: 'Joran Carbon Maguro Extreme', price: 850000, img: 'GBR/2.jpg' },
+            'tas-pancing': { name: 'Tas Rod Case Waterproof', price: 250000, img: 'GBR/3.webp' },
+            'joran-daiwa': { name: 'Joran Daiwa Crossfire 210cm', price: 650000, img: 'GBR/4.jpg' },
+            'reel-ryobi': { name: 'Reel Ryobi Zeus HP 4000', price: 780000, img: 'GBR/5.jpg' },
+            'kail-carbon': { name: 'Kail Pancing Carbon (Isi 50)', price: 45000, img: 'GBR/6.webp' },
+            'pelampung': { name: 'Pelampung Fosfor Malam', price: 15000, img: 'GBR/7.jpg' },
+            'timah': { name: 'Set Timah Pemberat (J8-J12)', price: 35000, img: 'GBR/8.jpg' },
+            'umpan-lure': { name: 'Minnow Lure 12gr', price: 55000, img: 'GBR/9.webp' },
+            'senar-pe': { name: 'Senar PE X8 Braided 300m', price: 120000, img: 'GBR/10.jpg' }
+        };
+
+        // --- SCRIPT LAINNYA TIDAK BERUBAH (HANYA LOGIKA) ---
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const authButtons = document.getElementById('auth-buttons');
+            const userIcon = document.getElementById('user-icon');
+            if (isLoggedIn === 'true') {
+                if(authButtons) authButtons.style.display = 'none';
+                if(userIcon) userIcon.style.display = 'block';
+            } else {
+                if(authButtons) authButtons.style.display = 'flex';
+                if(userIcon) userIcon.style.display = 'none';
+            }
+        }
+
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem('technoCart')) || [];
+            let totalItems = 0;
+            cart.forEach(item => { totalItems += item.qty; });
+            document.querySelector('.cart-count').textContent = totalItems;
+        }
+
+        function addToCart(productId, isBuyNow = false) {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                alert('Silakan Masuk atau Daftar terlebih dahulu.');
+                window.location.href = 'Hal-Login.html';
+                return;
+            }
+            const product = productsDB[productId];
+            if(!product) return;
+            let cart = JSON.parse(localStorage.getItem('technoCart')) || [];
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) { existingItem.qty += 1; } 
+            else { cart.push({ id: productId, name: product.name, price: product.price, img: product.img, variant: 'Standar', qty: 1 }); }
+            localStorage.setItem('technoCart', JSON.stringify(cart));
+            updateCartBadge();
+            if (isBuyNow === true) { window.location.href = 'checkout.html'; } 
+            else { alert(`Sukses! ${product.name} masuk keranjang.`); }
+        }
+
+        // ====== FUNGSI CHATBOT ======
+function toggleChat() {
+    const chatWindow = document.getElementById('chat-window');
+    chatWindow.style.display = chatWindow.style.display === 'none' || chatWindow.style.display === '' ? 'flex' : 'none';
+}
+
+function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const body = document.getElementById('chat-body');
+    const msg = input.value.trim().toLowerCase();
+
+    if (msg === "") return;
+
+    // Tampilkan Pesan User
+    body.innerHTML += `
+        <div style="background: var(--primary); color: white; padding: 8px 12px; border-radius: 10px; align-self: flex-end; max-width: 80%; margin-bottom: 5px;">
+            ${input.value}
+        </div>
+    `;
+
+    input.value = ""; 
+    body.scrollTop = body.scrollHeight;
+
+    setTimeout(() => {
+        let reply = "Maaf, Bang Pancing kurang paham. Coba tanya: joran, reel, atau promo.";
+        
+        if (msg.includes("joran")) reply = "Joran Carbon Maguro lagi best seller nih, Bos!";
+        else if (msg.includes("reel")) reply = "Reel Shimano Stella lagi ada diskon 20% lho.";
+        else if (msg.includes("promo")) reply = "Cek banner Promo Ombak Besar di atas ya!";
+        else if (msg.includes("halo")) reply = "Halo sobat mancing! Ada yang bisa Bang Pancing bantu?";
+
+        body.innerHTML += `
+            <div style="background: #e2e8f0; color: #1e293b; padding: 8px 12px; border-radius: 10px; align-self: flex-start; max-width: 80%; margin-bottom: 5px;">
+                ${reply}
+            </div>
+        `;
+        body.scrollTop = body.scrollHeight;
+    }, 1000);
+}
+
+// ====== WISHLIST FUNCTIONS ======
+
+// Toggle wishlist untuk produk
+function toggleWishlist(productId) {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn !== 'true') {
+        alert('Silakan login terlebih dahulu untuk menambahkan ke wishlist!');
+        window.location.href = 'Hal-Login.html';
+        return;
+    }
+
+    let wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+    const product = productsDB[productId];
+    const btn = event.currentTarget;
+    
+    // Cek apakah sudah ada di wishlist
+    const existingIndex = wishlist.findIndex(item => item.id === productId);
+    
+    if (existingIndex > -1) {
+        // Hapus dari wishlist
+        wishlist.splice(existingIndex, 1);
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="far fa-heart"></i>';
+        alert('❌ Dihapus dari wishlist!');
+    } else {
+        // Tambah ke wishlist
+        wishlist.push({
+            id: productId,
+            name: product.name,
+            price: product.price,
+            img: product.img,
+            variant: 'Standar',
+            addedDate: new Date().toISOString()
+        });
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fas fa-heart"></i>';
+        alert('❤️ Ditambahkan ke wishlist!');
+    }
+    
+    localStorage.setItem('technoWishlist', JSON.stringify(wishlist));
+    updateWishlistBadge();
+}
+
+// Update badge wishlist di header
+function updateWishlistBadge() {
+    const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+    const badge = document.querySelector('.wishlist-count');
+    if (badge) {
+        badge.textContent = wishlist.length;
+    }
+}
+
+// Cek status wishlist saat load halaman
+function checkWishlistStatus() {
+    const wishlist = JSON.parse(localStorage.getItem('technoWishlist')) || [];
+    
+    // Untuk semua tombol wishlist di halaman
+    document.querySelectorAll('.btn-wishlist').forEach(btn => {
+        // Ambil productId dari onclick attribute
+        const onclickAttr = btn.getAttribute('onclick');
+        if (onclickAttr) {
+            const productId = onclickAttr.match(/'([^']+)'/)[1];
+            if (wishlist.some(item => item.id === productId)) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-heart"></i>';
+            }
+        }
+    });
+}
+
+// ====== UPDATE EVENT LISTENERS ======
+// Tambahkan di akhir event listener yang sudah ada
+document.addEventListener('DOMContentLoaded', function() {
+    updateCartBadge();
+    checkLoginStatus();
+    updateWishlistBadge();
+    checkWishlistStatus();
+});
+
+window.addEventListener('pageshow', function() {
+    updateCartBadge();
+    checkLoginStatus();
+    updateWishlistBadge();
+    checkWishlistStatus();
+});
+
+        function buyNow(productId) { addToCart(productId, true); }
+        
+        function updateCountdown() {
+            const countdownElement = document.getElementById('countdown');
+            if(!countdownElement) return;
+            let time = countdownElement.textContent.split(':');
+            let hours = parseInt(time[0]); let minutes = parseInt(time[1]); let seconds = parseInt(time[2]);
+            if (seconds > 0) { seconds--; } else { if (minutes > 0) { minutes--; seconds = 59; } else { if (hours > 0) { hours--; minutes = 59; seconds = 59; } else { countdownElement.textContent = 'SELESAI'; return; } } }
+            countdownElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        setInterval(updateCountdown, 1000);
+
+        function showCategory(brandName) {
+            document.querySelector('.products-container').scrollIntoView({behavior: 'smooth'});
+            const allCards = document.querySelectorAll('.product-card');
+            allCards.forEach(card => {
+                const cardBrand = card.getAttribute('data-brand');
+                if (brandName === 'all' || (cardBrand && cardBrand.toLowerCase() === brandName.toLowerCase())) {
+                    card.style.display = 'flex';
+                } else { card.style.display = 'none'; }
+            });
+        }
+
+        window.addEventListener('pageshow', function() { updateCartBadge(); checkLoginStatus(); });
+        document.addEventListener('DOMContentLoaded', function() { updateCartBadge(); checkLoginStatus(); // Tambahkan ini agar bisa Enter di chat
+    const chatInput = document.getElementById('chat-input');
+    if(chatInput) {
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        });
+    }
+});
+    </script>
+</body>
+</html>
